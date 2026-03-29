@@ -16,7 +16,6 @@ but focuses on EasyTier's networking lifecycle instead of proxy workflows.
   - `local`: render local config and start `easytier-core`
   - `remote`: connect to a remote config server and manage client lifecycle
 - Architecture-aware runtime binary download
-- Installer-time runtime binary storage selection
 - Optional local `easytier-web-embed`
 - Core and Web autostart managed independently
 - Local/remote menus split by responsibility
@@ -107,7 +106,7 @@ stored.
 
 Available storage modes:
 
-- `auto`: choose automatically based on available free space
+- `auto`: choose automatically based on free space
 - `persistent`: always store binaries under the install directory
 - `tmp`: always store binaries under `/tmp`
 - `custom`: store binaries under a custom base path chosen by the user
@@ -167,6 +166,15 @@ Advanced features are grouped by capability:
 - `RPC 与日志 / RPC and Logging`
 - `ACL 与访问控制 / ACL and Access Control`
 
+This grouping currently covers items such as:
+
+- listeners, mapped listeners, STUN servers, `no-listener`
+- port forwarding, relay network whitelist, relay bandwidth limits
+- compression, multi-threading, KCP/QUIC proxy options
+- encryption, IPv6, P2P, hole punching, relay RPC behavior
+- RPC portal, config dir, log levels, file log rotation
+- ACL enablement and ACL file path
+
 This keeps the menu manageable on router terminals.
 
 ## Runtime Binary Delivery
@@ -184,18 +192,6 @@ Instead:
    legacy `pkg/<arch>/...` paths when available
 
 This keeps the installer lightweight while preserving multi-architecture support.
-
-## Binary Storage Modes
-
-Runtime binary placement is configurable.
-
-- `auto`: best-effort automatic placement
-- `persistent`: prefer persistent storage to avoid re-downloading after reboot
-- `tmp`: prefer tmpfs for low-flash devices
-- `custom`: use a user-defined persistent or mounted path
-
-This is especially useful on routers where `/data`, `/jffs`, `/etc/storage`, or
-external storage may have very different free-space profiles.
 
 ## Release Workflow
 

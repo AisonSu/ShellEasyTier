@@ -10,6 +10,8 @@ INSTALL_URL_OVERRIDE=$url
 INSTALL_LANG_OVERRIDE=$language
 INSTALL_ALIAS_OVERRIDE=$my_alias
 INSTALL_WEB_OVERRIDE=$install_web
+INSTALL_BINARY_STORAGE_MODE_OVERRIDE=$binary_storage_mode
+INSTALL_BINARY_STORAGE_PATH_OVERRIDE=$binary_storage_path
 
 . "$APPDIR/scripts/libs/set_config.sh"
 . "$APPDIR/scripts/libs/set_profile.sh"
@@ -62,6 +64,14 @@ done
 [ -n "$INSTALL_WEB_OVERRIDE" ] && {
     install_web=$INSTALL_WEB_OVERRIDE
     setconfig install_web "$INSTALL_WEB_OVERRIDE"
+}
+[ -n "$INSTALL_BINARY_STORAGE_MODE_OVERRIDE" ] && {
+    binary_storage_mode=$INSTALL_BINARY_STORAGE_MODE_OVERRIDE
+    setconfig binary_storage_mode "$INSTALL_BINARY_STORAGE_MODE_OVERRIDE"
+}
+[ -n "$INSTALL_BINARY_STORAGE_PATH_OVERRIDE" ] && {
+    binary_storage_path=$INSTALL_BINARY_STORAGE_PATH_OVERRIDE
+    setconfig binary_storage_path "$INSTALL_BINARY_STORAGE_PATH_OVERRIDE"
 }
 [ -n "$core_autostart" ] || {
     core_autostart=ON

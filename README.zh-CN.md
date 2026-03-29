@@ -16,7 +16,6 @@ EasyTier Shell 部署与管理工具。
   - `local`：生成本地配置并启动 `easytier-core`
   - `remote`：连接远程 config-server，仅管理接入、服务和状态
 - 按架构下载运行时二进制
-- 安装阶段可选择运行时二进制存放模式
 - 可选下载并启动本地 `easytier-web-embed`
 - Core 和 Web 独立控制开机自启
 - `local` / `remote` 菜单按职责拆分
@@ -167,6 +166,15 @@ ACL 配置：
 - `RPC 与日志`
 - `ACL 与访问控制`
 
+当前这些分组已经覆盖：
+
+- listeners、mapped listeners、STUN servers、`no-listener`
+- 端口转发、relay-network-whitelist、转发带宽限制
+- compression、多线程、KCP/QUIC 代理选项
+- 加密、IPv6、P2P、打洞、RPC 中继行为
+- RPC 门户、config-dir、日志级别、文件日志轮转
+- ACL 开关与 ACL 文件路径
+
 这样更适合在路由器终端上使用，不会把几十个选项挤在一个页面里。
 
 ## 运行时二进制分发
@@ -183,18 +191,6 @@ ACL 配置：
 3. 为兼容旧式发布目录，也支持回退到 `pkg/<arch>/...` 路径
 
 这种方式可以保持安装包很小，同时保留多架构支持能力。
-
-## 二进制存放模式
-
-运行时二进制位置是可配置的：
-
-- `auto`：自动选择
-- `persistent`：优先持久化存储，避免设备重启后重新下载
-- `tmp`：优先放在 tmpfs，适合闪存较小的设备
-- `custom`：使用用户指定的持久路径或挂载路径
-
-这对路由器设备尤其有用，因为 `/data`、`/jffs`、`/etc/storage`、外置存储
-的剩余空间差异通常很大。
 
 ## 发布流程
 

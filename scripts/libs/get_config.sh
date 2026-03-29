@@ -23,6 +23,7 @@ load_config() {
     [ -z "$tld_dns_zone" ] && tld_dns_zone='et.net.'
     [ -z "$enable_exit_node" ] && enable_exit_node=OFF
     [ -z "$bind_device" ] && bind_device=OFF
+    [ -z "$binary_storage_mode" ] && binary_storage_mode=auto
     [ -z "$proxy_forward_by_system" ] && proxy_forward_by_system=OFF
     [ -z "$no_listener" ] && no_listener=OFF
     [ -z "$disable_env_parsing" ] && disable_env_parsing=OFF

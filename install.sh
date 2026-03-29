@@ -25,6 +25,9 @@ if [ "$language" = en ]; then
     MSG_CONFIRM='Confirm installation? (1/0) > '
     MSG_WEB='Current architecture supports easytier-web-embed. Install local web console component?'
     MSG_WEB_NO='Current architecture does not bundle easytier-web-embed. Local web menu will stay hidden.'
+    MSG_BIN_STORE='Select runtime binary storage mode:'
+    MSG_BIN_STORE_HINT='auto chooses based on free space; persistent keeps binaries under the install directory; tmp stores them under /tmp; custom lets you choose a base path.'
+    MSG_BIN_STORE_PATH='Enter custom binary storage base path > '
     MSG_EXTRACT='Extracting selected files...'
     MSG_DONE='ShellEasytier installed successfully!'
     MSG_ALIAS_DONE='Use this command to manage ShellEasytier:'
@@ -43,6 +46,9 @@ else
     MSG_CONFIRM='确认安装？(1/0) > '
     MSG_WEB='当前架构支持 easytier-web-embed，是否一并安装本地 Web 控制台组件？'
     MSG_WEB_NO='当前架构不包含 easytier-web-embed，本地 Web 菜单将自动隐藏。'
+    MSG_BIN_STORE='请选择运行时二进制存放模式：'
+    MSG_BIN_STORE_HINT='auto 按空间自动判断；persistent 固定保存在安装目录下；tmp 固定存放到 /tmp；custom 使用你指定的基础路径。'
+    MSG_BIN_STORE_PATH='请输入自定义二进制基础路径 > '
     MSG_EXTRACT='开始解压所选文件...'
     MSG_DONE='ShellEasytier 已安装成功！'
     MSG_ALIAS_DONE='输入以下命令即可管理 ShellEasytier：'
@@ -324,6 +330,51 @@ choose_web_install() {
     fi
 }
 
+choose_binary_storage() {
+    while true; do
+        echo '-----------------------------------------------'
+        cecho "$MSG_BIN_STORE"
+        cecho "$MSG_BIN_STORE_HINT"
+        [ -n "$binary_storage_mode" ] && cecho "Current / 当前: ${binary_storage_mode}${binary_storage_path:+ ($binary_storage_path)}"
+        echo '-----------------------------------------------'
+        cecho ' 1 auto'
+        cecho ' 2 persistent'
+        cecho ' 3 tmp'
+        cecho ' 4 custom'
+        cecho ' 0 Exit / 退出安装'
+        echo '-----------------------------------------------'
+        read -r -p "$MSG_INPUT > " num
+        case "$num" in
+            0)
+                echo "$MSG_CANCEL"
+                exit 1
+                ;;
+            1)
+                binary_storage_mode=auto
+                binary_storage_path=''
+                return 0
+                ;;
+            2)
+                binary_storage_mode=persistent
+                binary_storage_path=''
+                return 0
+                ;;
+            3)
+                binary_storage_mode=tmp
+                binary_storage_path=''
+                return 0
+                ;;
+            4)
+                binary_storage_mode=custom
+                read -r -p "$MSG_BIN_STORE_PATH" binary_storage_path
+                [ -n "$binary_storage_path" ] && return 0
+                ;;
+            *)
+                ;;
+        esac
+    done
+}
+
 extract_project() {
     [ -d "$APPDIR" ] && "$APPDIR/start.sh" stop >/dev/null 2>&1
     mkdir -p "$(dirname "$APPDIR")"
@@ -352,15 +403,17 @@ install_main() {
 
     if choose_existing_install; then
         choose_web_install
+        choose_binary_storage
     else
         choose_web_install
+        choose_binary_storage
         setdir
         set_alias
     fi
 
     extract_project
 
-    export APPDIR url language my_alias install_web
+    export APPDIR url language my_alias install_web binary_storage_mode binary_storage_path
     . "$APPDIR/init.sh" >/dev/null 2>&1
 
     echo '-----------------------------------------------'

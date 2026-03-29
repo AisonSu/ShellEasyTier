@@ -332,28 +332,32 @@ advanced_security_menu() {
 advanced_runtime_menu() {
     while true; do
         comp_box "$MENU_ADVANCED_RUNTIME_TITLE" \
-            "1) $MENU_SET_RPC_PORTAL: $(value_or_empty "$rpc_portal")" \
-            "2) $MENU_SET_RPC_WHITELIST: $(value_or_empty "$rpc_portal_whitelist")" \
-            "3) $MENU_SET_CONSOLE_LOG_LEVEL: $(value_or_empty "$console_log_level")" \
-            "4) $MENU_SET_FILE_LOG_LEVEL: $(value_or_empty "$file_log_level")" \
-            "5) $MENU_SET_FILE_LOG_DIR: $(value_or_empty "$file_log_dir")" \
-            "6) $MENU_SET_FILE_LOG_SIZE: $(value_or_empty "$file_log_size")" \
-            "7) $MENU_SET_FILE_LOG_COUNT: $(value_or_empty "$file_log_count")" \
-            "8) $MENU_SET_CONFIG_DIR: $(value_or_empty "$config_dir")" \
-            "9) $MENU_TOGGLE_DISABLE_ENV_PARSING: $(switch_status_text "$disable_env_parsing")" \
+            "1) $MENU_SET_BINARY_STORAGE_MODE: $(value_or_empty "$binary_storage_mode")" \
+            "2) $MENU_SET_BINARY_STORAGE_PATH: $(value_or_empty "$binary_storage_path")" \
+            "3) $MENU_SET_RPC_PORTAL: $(value_or_empty "$rpc_portal")" \
+            "4) $MENU_SET_RPC_WHITELIST: $(value_or_empty "$rpc_portal_whitelist")" \
+            "5) $MENU_SET_CONSOLE_LOG_LEVEL: $(value_or_empty "$console_log_level")" \
+            "6) $MENU_SET_FILE_LOG_LEVEL: $(value_or_empty "$file_log_level")" \
+            "7) $MENU_SET_FILE_LOG_DIR: $(value_or_empty "$file_log_dir")" \
+            "8) $MENU_SET_FILE_LOG_SIZE: $(value_or_empty "$file_log_size")" \
+            "9) $MENU_SET_FILE_LOG_COUNT: $(value_or_empty "$file_log_count")" \
+            "10) $MENU_SET_CONFIG_DIR: $(value_or_empty "$config_dir")" \
+            "11) $MENU_TOGGLE_DISABLE_ENV_PARSING: $(switch_status_text "$disable_env_parsing")" \
             "0) $COMMON_BACK"
         read -r -p "$COMMON_INPUT> " num
         case "$num" in
             0|'') return ;;
-            1) edit_simple_value rpc_portal "$MENU_INPUT_RPC_PORTAL" ;;
-            2) edit_simple_value rpc_portal_whitelist "$MENU_INPUT_RPC_WHITELIST" ;;
-            3) edit_simple_value console_log_level "$MENU_INPUT_CONSOLE_LOG_LEVEL" ;;
-            4) edit_simple_value file_log_level "$MENU_INPUT_FILE_LOG_LEVEL" ;;
-            5) edit_simple_value file_log_dir "$MENU_INPUT_FILE_LOG_DIR" ;;
-            6) edit_simple_value file_log_size "$MENU_INPUT_FILE_LOG_SIZE" ;;
-            7) edit_simple_value file_log_count "$MENU_INPUT_FILE_LOG_COUNT" ;;
-            8) edit_simple_value config_dir "$MENU_INPUT_CONFIG_DIR" ;;
-            9) toggle_simple_value disable_env_parsing ;;
+            1) edit_simple_value binary_storage_mode "$MENU_INPUT_BINARY_STORAGE_MODE" ;;
+            2) edit_simple_value binary_storage_path "$MENU_INPUT_BINARY_STORAGE_PATH" ;;
+            3) edit_simple_value rpc_portal "$MENU_INPUT_RPC_PORTAL" ;;
+            4) edit_simple_value rpc_portal_whitelist "$MENU_INPUT_RPC_WHITELIST" ;;
+            5) edit_simple_value console_log_level "$MENU_INPUT_CONSOLE_LOG_LEVEL" ;;
+            6) edit_simple_value file_log_level "$MENU_INPUT_FILE_LOG_LEVEL" ;;
+            7) edit_simple_value file_log_dir "$MENU_INPUT_FILE_LOG_DIR" ;;
+            8) edit_simple_value file_log_size "$MENU_INPUT_FILE_LOG_SIZE" ;;
+            9) edit_simple_value file_log_count "$MENU_INPUT_FILE_LOG_COUNT" ;;
+            10) edit_simple_value config_dir "$MENU_INPUT_CONFIG_DIR" ;;
+            11) toggle_simple_value disable_env_parsing ;;
             *) errornum ;;
         esac
     done
