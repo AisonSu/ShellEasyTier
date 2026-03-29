@@ -235,6 +235,11 @@ Examples:
 - Command generation is in `scripts/libs/build_command.sh`
 - Local TOML rendering is in `scripts/libs/render_local_toml.sh`
 
+## Docs
+
+- `docs/README.md`
+- `docs/shellcrash-compatibility.zh-CN.md`
+
 ## License
 
 MIT. See `LICENSE`.

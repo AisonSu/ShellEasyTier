@@ -234,6 +234,11 @@ bash pack_release.sh
 - 启动命令生成：`scripts/libs/build_command.sh`
 - 本地 TOML 渲染：`scripts/libs/render_local_toml.sh`
 
+## 文档
+
+- `docs/README.md`
+- `docs/shellcrash-compatibility.zh-CN.md`
+
 ## 许可证
 
 MIT，详见 `LICENSE`。

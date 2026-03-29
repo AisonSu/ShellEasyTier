@@ -10,6 +10,7 @@ export APPDIR
 . "$APPDIR/scripts/libs/set_config.sh"
 . "$APPDIR/scripts/libs/check_cmd.sh"
 . "$APPDIR/scripts/libs/health_check.sh"
+. "$APPDIR/scripts/libs/compatibility.sh"
 . "$APPDIR/scripts/libs/logger.sh"
 
 bfstart() {
@@ -62,6 +63,7 @@ case "$1" in
         ;;
     stop)
         logger 'ShellEasytier 服务即将关闭......' 33
+        compat_remove_rules >/dev/null 2>&1
         if [ -f "$ET_PIDFILE" ]; then
             kill -TERM "$(cat "$ET_PIDFILE")" 2>/dev/null
             rm -f "$ET_PIDFILE"
