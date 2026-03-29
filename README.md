@@ -1,5 +1,8 @@
 # ShellEasyTier
 
+- English
+- [简体中文](README.zh-CN.md)
+
 ShellEasyTier is a Shell-based EasyTier deployment and management toolkit for
 routers, embedded Linux devices, and generic Linux hosts.
 
@@ -50,6 +53,7 @@ ShellEasytier/
 ├── init.sh
 ├── version
 ├── README.md
+├── README.zh-CN.md
 ├── LICENSE
 ├── ShellEasytier.tar.gz
 ├── pkg/
