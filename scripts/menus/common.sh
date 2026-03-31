@@ -59,8 +59,20 @@ value_or_empty() {
     [ -n "$1" ] && printf '%s' "$1" || printf '%s' "$COMMON_EMPTY"
 }
 
+safe_config_key() {
+    case "$1" in
+        ''|*[!A-Za-z0-9_]*|[0-9]*)
+            return 1
+            ;;
+    esac
+}
+
 current_effective_value() {
     key="$1"
+    safe_config_key "$key" || {
+        printf '%s' "$COMMON_EMPTY"
+        return 1
+    }
     eval "value=\${$key}"
     printf '%s' "$value"
 }
@@ -111,6 +123,7 @@ trim_comments_to_tmp() {
 edit_simple_value() {
     key="$1"
     prompt="$2"
+    safe_config_key "$key" || return 1
     current=$(current_effective_value "$key")
     comp_box "$prompt" "当前值: ${current:-<empty>}"
     read -r -p "$COMMON_INPUT> " value
@@ -121,6 +134,7 @@ edit_simple_value() {
 edit_simple_value_keep_previous() {
     key="$1"
     prompt="$2"
+    safe_config_key "$key" || return 1
     current=$(current_effective_value "$key")
     comp_box "$prompt" "当前值: ${current:-<empty>}"
     read -r -p "$COMMON_INPUT> " value
@@ -131,6 +145,7 @@ edit_simple_value_keep_previous() {
 
 toggle_simple_value() {
     key="$1"
+    safe_config_key "$key" || return 1
     current=$(grep "^$key=" "$APPDIR/configs/ShellEasytier.cfg" 2>/dev/null | sed "s/^$key=//")
     [ "$current" = ON ] && setconfig "$key" OFF || setconfig "$key" ON
     load_config
