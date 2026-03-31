@@ -31,4 +31,12 @@ tar -czf "$TMP_FILE" \
 
 mv -f "$TMP_FILE" "$OUT_FILE"
 
+if command -v sha256sum >/dev/null 2>&1; then
+    rm -f "$OUT_FILE.sha256"
+    sha256sum "$OUT_FILE" > "$OUT_FILE.sha256"
+    find "$DIST_DIR" -maxdepth 1 -type f ! -name '*.sha256' ! -name 'ShellEasytier.tar.gz' | while IFS= read -r asset; do
+        sha256sum "$asset" > "$asset.sha256"
+    done
+fi
+
 printf 'created %s\n' "$OUT_FILE"

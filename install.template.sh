@@ -11,6 +11,7 @@ echo '***********************************************'
 
 archive_name='ShellEasytier.tar.gz'
 archive_url="$url/$archive_name"
+checksum_url="$archive_url.sha256"
 REQ_SCRIPT_KB=1024
 
 if [ "$language" = en ]; then
@@ -22,6 +23,8 @@ if [ "$language" = en ]; then
     MSG_DOWN='Downloading installation package...'
     MSG_DOWN_FAIL='Failed to download installation package!'
     MSG_VERIFY_FAIL='Downloaded archive is invalid or corrupted.'
+    MSG_VERIFY_SKIP='Checksum tool is unavailable locally, falling back to archive integrity check.'
+    MSG_CHECKSUM_FAIL='Checksum verification failed!'
     MSG_TLS_NOTE='TLS verification may fall back to compatibility mode on legacy router environments.'
     MSG_DIR_WARN='This package only installs ShellEasytier scripts. Runtime binaries will be downloaded on first start.'
     MSG_DIR_BAD='No write permission or not enough free space, please choose again!'
@@ -46,6 +49,8 @@ else
     MSG_DOWN='开始下载安装包...'
     MSG_DOWN_FAIL='安装包下载失败！'
     MSG_VERIFY_FAIL='下载的安装包无效或已损坏。'
+    MSG_VERIFY_SKIP='本机缺少校验工具，将回退到压缩包完整性校验。'
+    MSG_CHECKSUM_FAIL='校验和验证失败！'
     MSG_TLS_NOTE='在老旧路由环境下，TLS 校验可能会退化到兼容模式。'
     MSG_DIR_WARN='当前安装包只安装 ShellEasytier 脚本主体，运行时二进制会在首次启动时下载。'
     MSG_DIR_BAD='目录不可写或剩余空间不足，请重新选择！'
@@ -104,6 +109,32 @@ remote_size_kb() {
 verify_archive() {
     [ -s "$1" ] || return 1
     tar -tzf "$1" >/dev/null 2>&1
+}
+
+hash_file_sha256() {
+    if ckcmd sha256sum; then
+        sha256sum "$1" | awk '{print $1}'
+    elif ckcmd busybox && busybox --list 2>/dev/null | grep -qx 'sha256sum'; then
+        busybox sha256sum "$1" | awk '{print $1}'
+    elif ckcmd shasum; then
+        shasum -a 256 "$1" | awk '{print $1}'
+    elif ckcmd openssl; then
+        openssl dgst -sha256 "$1" | awk '{print $NF}'
+    else
+        return 1
+    fi
+}
+
+verify_archive_checksum() {
+    archive_path="$1"
+    checksum_path="$2"
+    [ -s "$checksum_path" ] || return 2
+
+    expected=$(awk '{print $1}' "$checksum_path" | head -1)
+    [ -n "$expected" ] || return 1
+
+    actual=$(hash_file_sha256 "$archive_path") || return 3
+    [ "$actual" = "$expected" ]
 }
 
 check_arch() {
@@ -409,6 +440,7 @@ extract_project() {
     echo '-----------------------------------------------'
     echo "$MSG_EXTRACT"
     tar -zxf "$archive_path" -C "$(dirname "$APPDIR")" || exit 1
+    rm -f "$archive_path" "$checksum_path"
 }
 
 install_main() {
@@ -427,8 +459,25 @@ install_main() {
         cecho "\033[31m$MSG_DOWN_FAIL\033[0m"
         exit 1
     }
+    checksum_path=/tmp/ShellEasytier.tar.gz.sha256
+    rm -f "$checksum_path"
+    webget "$checksum_path" "$checksum_url" >/dev/null 2>&1 || true
+    verify_archive_checksum "$archive_path" "$checksum_path"
+    checksum_status=$?
+    case "$checksum_status" in
+        0|2)
+            ;;
+        3)
+            cecho "\033[33m$MSG_VERIFY_SKIP\033[0m"
+            ;;
+        *)
+            rm -f "$archive_path" "$checksum_path"
+            cecho "\033[31m$MSG_CHECKSUM_FAIL\033[0m"
+            exit 1
+            ;;
+    esac
     verify_archive "$archive_path" || {
-        rm -f "$archive_path"
+        rm -f "$archive_path" "$checksum_path"
         cecho "\033[31m$MSG_VERIFY_FAIL\033[0m"
         exit 1
     }

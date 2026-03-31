@@ -292,6 +292,7 @@ bash pack_release.sh
 - `uninstall.sh`
 - `uninstall_en.sh`
 - `ShellEasytier.tar.gz`
+- `ShellEasytier.tar.gz.sha256`
 - `easytier-core-<arch>`
 - `easytier-cli-<arch>`
 - `easytier-web-embed-<arch>`（支持的架构）
@@ -301,6 +302,8 @@ bash pack_release.sh
 - GitHub Releases 资产
 - 静态网站目录
 - 可公网访问的对象存储
+
+发布资产会同时提供对应的 `.sha256` 校验文件。
 
 ## 开发说明
 

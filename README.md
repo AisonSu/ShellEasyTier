@@ -290,6 +290,7 @@ For direct installation to work, the publish root should contain:
 - `uninstall.sh`
 - `uninstall_en.sh`
 - `ShellEasytier.tar.gz`
+- `ShellEasytier.tar.gz.sha256`
 - `easytier-core-<arch>`
 - `easytier-cli-<arch>`
 - `easytier-web-embed-<arch>` where supported
@@ -299,6 +300,8 @@ Examples:
 - GitHub Releases assets
 - A static web server
 - An object storage bucket with public HTTP access
+
+Release assets also publish matching `.sha256` files.
 
 ## Development Notes
 
