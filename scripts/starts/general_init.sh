@@ -29,6 +29,6 @@ if [ ! -f "$APPDIR/.start_error" ] && [ ! -f "$APPDIR/.dis_startup_core" ]; then
     "$APPDIR/start.sh" start
 fi
 
-if [ ! -f "$APPDIR/.dis_startup_web" ]; then
+if [ "$install_web" = ON ] && [ "$web_autostart" = ON ] && [ ! -f "$APPDIR/.start_error" ] && [ ! -f "$APPDIR/.dis_startup_web" ]; then
     "$APPDIR/start.sh" web-start
 fi
