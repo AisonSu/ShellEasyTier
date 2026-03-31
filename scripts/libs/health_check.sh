@@ -40,11 +40,12 @@ port_is_listening() {
 
 cli_node_ready() {
     [ -x "$BINDIR/easytier-cli" ] || return 1
+    [ -n "$rpc_cli_portal" ] || return 1
 
     mkdir -p "$TMPDIR" 2>/dev/null
     tmp_out="$TMPDIR/cli_ready.$$"
 
-    "$BINDIR/easytier-cli" -p "$rpc_portal" -o json node > "$tmp_out" 2>&1 &
+    "$BINDIR/easytier-cli" -p "$rpc_cli_portal" -o json node > "$tmp_out" 2>&1 &
     pid=$!
     i=1
 

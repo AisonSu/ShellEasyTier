@@ -176,7 +176,7 @@ run_cli_query() {
     mkdir -p "$TMPDIR" 2>/dev/null
     rm -f "$tmp_out"
 
-    "$BINDIR/easytier-cli" -p "$rpc_portal" "$subcmd" > "$tmp_out" 2>&1 &
+    "$BINDIR/easytier-cli" -p "$rpc_cli_portal" "$subcmd" > "$tmp_out" 2>&1 &
     pid=$!
 
     while kill -0 "$pid" 2>/dev/null && [ "$i" -le 5 ]; do
@@ -223,7 +223,7 @@ run_cli_args() {
     mkdir -p "$TMPDIR" 2>/dev/null
     rm -f "$tmp_out"
 
-    "$BINDIR/easytier-cli" -p "$rpc_portal" "$@" > "$tmp_out" 2>&1 &
+    "$BINDIR/easytier-cli" -p "$rpc_cli_portal" "$@" > "$tmp_out" 2>&1 &
     pid=$!
 
     while kill -0 "$pid" 2>/dev/null && [ "$i" -le 5 ]; do

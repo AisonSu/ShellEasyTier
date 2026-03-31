@@ -1,6 +1,39 @@
 [ -n "$__IS_LIB_GET_CONFIG" ] && return
 __IS_LIB_GET_CONFIG=1
 
+normalize_rpc_portal_for_cli() {
+    portal="$1"
+
+    case "$portal" in
+        ''|0)
+            return 1
+            ;;
+        *:*)
+            host=${portal%:*}
+            port=${portal##*:}
+            ;;
+        *)
+            host=''
+            port=$portal
+            ;;
+    esac
+
+    [ -n "$port" ] || return 1
+    [ "$port" = 0 ] && return 1
+
+    case "$host" in
+        ''|'0.0.0.0'|'*')
+            printf '127.0.0.1:%s\n' "$port"
+            ;;
+        '::'|'[::]')
+            printf '[::1]:%s\n' "$port"
+            ;;
+        *)
+            printf '%s\n' "$portal"
+            ;;
+    esac
+}
+
 load_config() {
     cfg_path="$APPDIR/configs/ShellEasytier.cfg"
     cfg_example="$APPDIR/configs/ShellEasytier.cfg.example"
@@ -18,6 +51,7 @@ load_config() {
     [ -z "$network_name" ] && network_name=default
     [ -z "$rpc_portal" ] && rpc_portal='0.0.0.0:15888'
     [ -z "$rpc_portal_whitelist" ] && rpc_portal_whitelist='127.0.0.1,::1/128'
+    rpc_cli_portal=$(normalize_rpc_portal_for_cli "$rpc_portal" 2>/dev/null || true)
     [ -z "$default_protocol" ] && default_protocol=udp
     [ -z "$compression" ] && compression=none
     [ -z "$multi_thread_count" ] && multi_thread_count=2
@@ -55,7 +89,7 @@ load_config() {
     ET_CORE_RUN_LOG="$TMPDIR/easytier-core.run.log"
     ET_WEB_RUN_LOG="$TMPDIR/easytier-web.run.log"
 
-    export ET_CFG_PATH ET_PIDFILE ET_WEB_PIDFILE ET_TOML_FILE ET_CORE_RUN_LOG ET_WEB_RUN_LOG release_version
+    export ET_CFG_PATH ET_PIDFILE ET_WEB_PIDFILE ET_TOML_FILE ET_CORE_RUN_LOG ET_WEB_RUN_LOG release_version rpc_cli_portal
 }
 
 load_config
