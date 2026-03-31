@@ -37,6 +37,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          bash build_installers.sh
           bash pack_release.sh
 
       - name: Prepare release assets
@@ -44,9 +45,6 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p dist
-          cp install.sh dist/install.sh
-          cp install_en.sh dist/install_en.sh
-          cp ShellEasytier.tar.gz dist/ShellEasytier.tar.gz
 
           for archdir in pkg/*; do
             [ -d "$archdir" ] || continue

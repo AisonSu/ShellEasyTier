@@ -47,17 +47,17 @@ EasyTier Shell 部署与管理工具。
 
 ```text
 ShellEasytier/
-├── install.sh
-├── install_en.sh
+├── install.template.sh
+├── uninstall.template.sh
+├── build_installers.sh
+├── dist/
 ├── menu.sh
 ├── start.sh
 ├── init.sh
-├── uninstall.sh
 ├── version
 ├── README.md
 ├── README.zh-CN.md
 ├── LICENSE
-├── ShellEasytier.tar.gz
 ├── pkg/
 │   └── <arch>/
 │       ├── easytier-core
@@ -114,6 +114,8 @@ ShellEasyTier 会优先尝试正常的 HTTPS 校验。
 这种退化是为了兼容设备，不等于额外建立了更强的信任链，因此仍需要配合
 下载后内容验真。
 
+生成后的远程安装/卸载脚本统一输出到 `dist/` 目录。
+
 安装阶段还会询问运行时二进制的存放位置。
 
 可选模式：
@@ -130,6 +132,11 @@ ShellEasyTier 会优先尝试正常的 HTTPS 校验。
 ```sh
 sh "$APPDIR/uninstall.sh"
 ```
+
+发布产物中也会提供：
+
+- `dist/uninstall.sh`
+- `dist/uninstall_en.sh`
 
 卸载脚本会移除：
 
@@ -259,11 +266,19 @@ OpenWrt / 路由器环境，尤其是与 ShellCrash 共存的场景。
 bash prepare_pkg.sh
 ```
 
+生成多语言远程安装/卸载脚本：
+
+```sh
+bash build_installers.sh
+```
+
 构建脚本发布包：
 
 ```sh
 bash pack_release.sh
 ```
+
+构建产物统一输出到 `dist/`。
 
 当推送 tag 时，GitHub Actions 会在工作流中自动改写 `version` 文件、构建
 发布包，并自动发布 release assets。
@@ -274,6 +289,8 @@ bash pack_release.sh
 
 - `install.sh`
 - `install_en.sh`
+- `uninstall.sh`
+- `uninstall_en.sh`
 - `ShellEasytier.tar.gz`
 - `easytier-core-<arch>`
 - `easytier-cli-<arch>`

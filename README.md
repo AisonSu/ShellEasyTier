@@ -47,17 +47,17 @@ but focuses on EasyTier's networking lifecycle instead of proxy workflows.
 
 ```text
 ShellEasytier/
-├── install.sh
-├── install_en.sh
+├── install.template.sh
+├── uninstall.template.sh
+├── build_installers.sh
+├── dist/
 ├── menu.sh
 ├── start.sh
 ├── init.sh
-├── uninstall.sh
 ├── version
 ├── README.md
 ├── README.zh-CN.md
 ├── LICENSE
-├── ShellEasytier.tar.gz
 ├── pkg/
 │   └── <arch>/
 │       ├── easytier-core
@@ -111,6 +111,8 @@ download path may fall back to compatibility mode.
 This fallback is for device compatibility, not for stronger trust guarantees.
 Downloaded release archives and runtime binaries still need content validation.
 
+Generated remote install and uninstall scripts are written to `dist/`.
+
 During installation, ShellEasyTier also asks where runtime binaries should be
 stored.
 
@@ -128,6 +130,11 @@ To fully remove ShellEasyTier and its startup hooks:
 ```sh
 sh "$APPDIR/uninstall.sh"
 ```
+
+Release assets also provide:
+
+- `dist/uninstall.sh`
+- `dist/uninstall_en.sh`
 
 This removes:
 
@@ -257,11 +264,19 @@ Prepare binary payloads:
 bash prepare_pkg.sh
 ```
 
+Generate localized remote install and uninstall scripts:
+
+```sh
+bash build_installers.sh
+```
+
 Build the script release tarball:
 
 ```sh
 bash pack_release.sh
 ```
+
+Build output is written to `dist/`.
 
 On tag push, GitHub Actions rewrites `version` in workflow workspace, builds the
 release tarball, and publishes release assets automatically.
@@ -272,6 +287,8 @@ For direct installation to work, the publish root should contain:
 
 - `install.sh`
 - `install_en.sh`
+- `uninstall.sh`
+- `uninstall_en.sh`
 - `ShellEasytier.tar.gz`
 - `easytier-core-<arch>`
 - `easytier-cli-<arch>`

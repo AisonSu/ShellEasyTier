@@ -8,17 +8,36 @@ export APPDIR
 
 . "$APPDIR/scripts/libs/get_config.sh"
 
+if [ "$language" = en ]; then
+    MSG_TITLE1='-----------------------------------------------'
+    MSG_TITLE2='ShellEasytier will be fully removed.'
+    MSG_TITLE3='This removes startup hooks, aliases, services, runtime cache, and the install directory.'
+    MSG_CONFIRM='Confirm uninstall? (1/0) > '
+    MSG_NOT_FOUND='Install directory not found.'
+    MSG_CANCEL='Uninstall cancelled.'
+    MSG_DONE='ShellEasytier has been removed.'
+    MSG_HINT='If the current shell still keeps old aliases, reopen the session.'
+else
+    MSG_TITLE1='-----------------------------------------------'
+    MSG_TITLE2='即将完整卸载 ShellEasytier。'
+    MSG_TITLE3='将移除开机启动钩子、别名、服务、运行时缓存以及安装目录。'
+    MSG_CONFIRM='确认卸载？(1/0) > '
+    MSG_NOT_FOUND='安装目录不存在。'
+    MSG_CANCEL='已取消卸载。'
+    MSG_DONE='ShellEasytier 已卸载。'
+    MSG_HINT='如果当前终端仍保留旧别名，请重新打开终端会话。'
+fi
+
 msg() {
     printf '%s\n' "$*"
 }
 
 confirm_uninstall() {
-    msg '-----------------------------------------------'
-    msg 'ShellEasytier will be fully removed. / 即将完整卸载 ShellEasytier。'
-    msg 'This removes startup hooks, aliases, services, runtime cache, and the install directory.'
-    msg '将移除开机启动钩子、别名、服务、运行时缓存以及安装目录。'
-    msg '-----------------------------------------------'
-    printf 'Confirm uninstall? (1/0) > '
+    msg "$MSG_TITLE1"
+    msg "$MSG_TITLE2"
+    msg "$MSG_TITLE3"
+    msg "$MSG_TITLE1"
+    printf '%s' "$MSG_CONFIRM"
     read -r res
     [ "$res" = 1 ]
 }
@@ -36,12 +55,12 @@ remove_runtime_dirs() {
 
 main() {
     [ -d "$APPDIR" ] || {
-        msg 'Install directory not found. / 安装目录不存在。'
+        msg "$MSG_NOT_FOUND"
         exit 1
     }
 
     confirm_uninstall || {
-        msg 'Uninstall cancelled. / 已取消卸载。'
+        msg "$MSG_CANCEL"
         exit 1
     }
 
@@ -53,9 +72,8 @@ main() {
 
     [ "$APPDIR" != / ] && rm -rf "$APPDIR"
 
-    msg 'ShellEasytier has been removed. / ShellEasytier 已卸载。'
-    msg 'If the current shell still keeps old aliases, reopen the session.'
-    msg '如果当前终端仍保留旧别名，请重新打开终端会话。'
+    msg "$MSG_DONE"
+    msg "$MSG_HINT"
 }
 
 main "$@"

@@ -1,11 +1,12 @@
 #!/bin/sh
+# Generated from this template by build_installers.sh.
 
 echo '***********************************************'
 echo '**             Welcome to / 欢迎使用          **'
 echo '**               ShellEasytier                **'
 echo '***********************************************'
 
-[ -z "$language" ] && language=chs
+[ -z "$language" ] && language='__INSTALL_LANG__'
 [ -z "$url" ] && url='https://github.com/AisonSu/ShellEasyTier/releases/latest/download'
 
 archive_name='ShellEasytier.tar.gz'
