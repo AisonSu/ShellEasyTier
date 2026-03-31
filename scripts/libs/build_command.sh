@@ -14,6 +14,11 @@ shell_quote_single() {
     printf "'"
 }
 
+append_literal_arg() {
+    [ $# -gt 0 ] || return 0
+    cmd="$cmd $(shell_quote_single "$1")"
+}
+
 append_flag_from_list() {
     flag="$1"
     file="$2"
@@ -23,7 +28,8 @@ append_flag_from_list() {
         case "$line" in
             \#*) continue ;;
         esac
-        cmd="$cmd $flag \"$line\""
+        append_literal_arg "$flag"
+        append_literal_arg "$line"
     done < "$file"
 }
 
@@ -31,14 +37,16 @@ append_switch_flag() {
     value="$1"
     flag="$2"
     [ "$value" = ON ] || [ "$value" = 1 ] || [ "$value" = true ] || [ "$value" = TRUE ] || return 0
-    cmd="$cmd $flag true"
+    append_literal_arg "$flag"
+    append_literal_arg true
 }
 
 append_value_flag() {
     value="$1"
     flag="$2"
     [ -n "$value" ] || return 0
-    cmd="$cmd $flag \"$value\""
+    append_literal_arg "$flag"
+    append_literal_arg "$value"
 }
 
 resolve_config_server_value() {
@@ -62,8 +70,14 @@ resolve_config_server_value() {
 }
 
 build_local_command() {
-    cmd='"$BINDIR/easytier-core" -c "$TMPDIR/easytier.toml"'
-    [ "$acl_enable" = ON ] && [ -s "$acl_config_path" ] && cmd="$cmd -c \"$acl_config_path\""
+    cmd=''
+    append_literal_arg "$BINDIR/easytier-core"
+    append_literal_arg -c
+    append_literal_arg "$TMPDIR/easytier.toml"
+    if [ "$acl_enable" = ON ] && [ -s "$acl_config_path" ]; then
+        append_literal_arg -c
+        append_literal_arg "$acl_config_path"
+    fi
     append_value_flag "$rpc_portal" '-r'
     append_value_flag "$rpc_portal_whitelist" '--rpc-portal-whitelist'
     append_value_flag "$hostname" '--hostname'
@@ -112,7 +126,8 @@ build_local_command() {
 
 build_remote_command() {
     config_server_value=$(resolve_config_server_value)
-    cmd='"$BINDIR/easytier-core"'
+    cmd=''
+    append_literal_arg "$BINDIR/easytier-core"
     append_value_flag "$config_server_value" '--config-server'
     append_value_flag "$config_dir" '--config-dir'
     append_switch_flag "$disable_env_parsing" '--disable-env-parsing'
@@ -130,8 +145,17 @@ build_remote_command() {
 
 build_web_command() {
     if [ -x "$BINDIR/easytier-web-embed" ]; then
-        printf '"$BINDIR/easytier-web-embed" --api-server-port "%s" --api-host "http://127.0.0.1:%s" --config-server-port "%s" --config-server-protocol "%s"\n' \
-            "$web_console_api_port" "$web_console_api_port" "$web_console_config_port" "$web_console_config_protocol"
+        cmd=''
+        append_literal_arg "$BINDIR/easytier-web-embed"
+        append_literal_arg --api-server-port
+        append_literal_arg "$web_console_api_port"
+        append_literal_arg --api-host
+        append_literal_arg "http://127.0.0.1:$web_console_api_port"
+        append_literal_arg --config-server-port
+        append_literal_arg "$web_console_config_port"
+        append_literal_arg --config-server-protocol
+        append_literal_arg "$web_console_config_protocol"
+        printf '%s\n' "$cmd"
     else
         printf '\n'
     fi

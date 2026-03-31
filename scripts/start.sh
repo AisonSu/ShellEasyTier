@@ -15,6 +15,36 @@ export APPDIR
 . "$APPDIR/scripts/libs/compatibility.sh"
 . "$APPDIR/scripts/libs/logger.sh"
 
+load_command_env() {
+    [ -f "$APPDIR/configs/command.env" ] || return 1
+    . "$APPDIR/configs/command.env"
+}
+
+run_command_string() {
+    cmd_string="$1"
+    [ -n "$cmd_string" ] || return 1
+    eval "set -- $cmd_string" || return 1
+    "$@"
+}
+
+exec_command_string() {
+    cmd_string="$1"
+    [ -n "$cmd_string" ] || return 1
+    eval "set -- $cmd_string" || return 1
+    exec "$@"
+}
+
+exec_core_command() {
+    load_command_env || return 1
+    exec_command_string "$COMMAND"
+}
+
+exec_web_command() {
+    load_command_env || return 1
+    [ -n "$WEB_COMMAND" ] || return 1
+    exec_command_string "$WEB_COMMAND"
+}
+
 cleanup_profile_files() {
     for profile in /etc/profile /opt/etc/profile /jffs/configs/profile.add; do
         clear_profile "$profile"
@@ -58,9 +88,9 @@ start_legacy() {
     ckcmd nohup && _nohup='nohup'
 
     if ckcmd setsid; then
-        $_nohup setsid sh -c '. "$1"; eval "exec $COMMAND"' sh "$APPDIR/configs/command.env" >> "$ET_CORE_RUN_LOG" 2>&1 &
+        $_nohup setsid "$APPDIR/start.sh" core-run >> "$ET_CORE_RUN_LOG" 2>&1 &
     else
-        $_nohup sh -c '. "$1"; eval "exec $COMMAND"' sh "$APPDIR/configs/command.env" >> "$ET_CORE_RUN_LOG" 2>&1 &
+        $_nohup "$APPDIR/start.sh" core-run >> "$ET_CORE_RUN_LOG" 2>&1 &
     fi
 
     echo $! > "$ET_PIDFILE"
@@ -68,7 +98,7 @@ start_legacy() {
 }
 
 run_web_command() {
-    . "$APPDIR/configs/command.env"
+    load_command_env || return 1
     [ -n "$WEB_COMMAND" ] || return 1
 
     mkdir -p "$TMPDIR" 2>/dev/null
@@ -76,9 +106,9 @@ run_web_command() {
     ckcmd nohup && _nohup='nohup'
 
     if ckcmd setsid; then
-        $_nohup setsid sh -c '. "$1"; eval "exec $WEB_COMMAND"' sh "$APPDIR/configs/command.env" >> "$ET_WEB_RUN_LOG" 2>&1 &
+        $_nohup setsid "$APPDIR/start.sh" web-run >> "$ET_WEB_RUN_LOG" 2>&1 &
     else
-        $_nohup sh -c '. "$1"; eval "exec $WEB_COMMAND"' sh "$APPDIR/configs/command.env" >> "$ET_WEB_RUN_LOG" 2>&1 &
+        $_nohup "$APPDIR/start.sh" web-run >> "$ET_WEB_RUN_LOG" 2>&1 &
     fi
 
     echo $! > "$ET_WEB_PIDFILE"
@@ -145,14 +175,17 @@ case "$1" in
     daemon-run)
         bfstart || exit 1
         "$APPDIR/scripts/starts/afstart.sh" >/dev/null 2>&1 &
-        . "$APPDIR/configs/command.env"
-        eval "exec $COMMAND"
+        exec_core_command
         ;;
     web-daemon-run)
         bfstart || exit 1
-        . "$APPDIR/configs/command.env"
-        [ -n "$WEB_COMMAND" ] || exit 1
-        eval "exec $WEB_COMMAND"
+        exec_web_command
+        ;;
+    core-run)
+        exec_core_command
+        ;;
+    web-run)
+        exec_web_command
         ;;
     web-start)
         bfstart || exit 1
@@ -175,8 +208,8 @@ case "$1" in
         ;;
     debug)
         bfstart || exit 1
-        . "$APPDIR/configs/command.env"
-        eval "$COMMAND"
+        load_command_env || exit 1
+        run_command_string "$COMMAND"
         ;;
     *)
         "$1" "$2" "$3" "$4" "$5" "$6"
