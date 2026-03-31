@@ -113,6 +113,24 @@ Downloaded release archives and runtime binaries still need content validation.
 
 Generated remote install and uninstall scripts are written to `dist/`.
 
+## Remote Mode Notes
+
+In `remote` mode, the core process may run normally even when the local RPC
+management port is not available.
+
+ShellEasyTier therefore treats these as two separate states:
+
+- **service running**: `easytier-core` is alive and connected according to its
+  own startup path
+- **local RPC ready**: local `easytier-cli -p <rpc_portal>` can actually connect
+
+As a result:
+
+- service start/stop status is based on core liveness
+- local tools visibility is more conservative and may stay hidden in `remote`
+  mode when local RPC is unavailable
+- this does not necessarily mean the remote config-server connection failed
+
 During installation, ShellEasyTier also asks where runtime binaries should be
 stored.
 

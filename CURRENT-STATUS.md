@@ -103,6 +103,7 @@ capabilities implemented:
 - start/restart menu flow now reuses shared wait logic instead of local 5-second polling loops
 - menu CLI queries no longer shell-wrap `easytier-cli` through `sh -c`
 - remote mode no longer forces local tools visibility when RPC management is unavailable
+- remote mode now treats core liveness and local RPC readiness as separate states
 
 ### Boot Recovery
 

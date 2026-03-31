@@ -116,6 +116,24 @@ ShellEasyTier 会优先尝试正常的 HTTPS 校验。
 
 生成后的远程安装/卸载脚本统一输出到 `dist/` 目录。
 
+## Remote 模式说明
+
+在 `remote` 模式下，可能出现：
+
+- `easytier-core` 已正常运行
+- 但本地 RPC 管理端口没有真正可用
+
+因此 ShellEasyTier 现在明确把两种状态分开：
+
+- **服务运行中**：核心进程正常存活并按其自身逻辑联网
+- **本地 RPC 就绪**：本地 `easytier-cli -p <rpc_portal>` 可以真正连上管理面
+
+这意味着：
+
+- 服务启动/停止状态以 core 存活为准
+- `remote` 模式下如果本地 RPC 不可用，tools 菜单可能会隐藏
+- 这不一定代表远程 config-server 连接失败
+
 安装阶段还会询问运行时二进制的存放位置。
 
 可选模式：
