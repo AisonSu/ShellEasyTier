@@ -272,6 +272,12 @@ bash prepare_pkg.sh
 bash build_installers.sh
 ```
 
+校验运行时资产矩阵：
+
+```sh
+bash verify_release_assets.sh
+```
+
 构建脚本发布包：
 
 ```sh

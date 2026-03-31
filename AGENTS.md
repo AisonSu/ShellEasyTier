@@ -310,6 +310,7 @@ Use this as a quick dependency checklist:
   - check tarball size
   - check exclusion rules on case-sensitive paths
   - check release workflow expectations
+  - check `verify_release_assets.sh`
 - If you change `scripts/menu.sh`:
   - check both `local` and `remote`
   - check hidden/shown menu behavior in stopped vs running states

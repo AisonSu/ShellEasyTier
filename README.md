@@ -270,6 +270,12 @@ Generate localized remote install and uninstall scripts:
 bash build_installers.sh
 ```
 
+Validate runtime asset matrix:
+
+```sh
+bash verify_release_assets.sh
+```
+
 Build the script release tarball:
 
 ```sh

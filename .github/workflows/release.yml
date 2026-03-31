@@ -37,6 +37,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          bash verify_release_assets.sh
           bash build_installers.sh
           bash pack_release.sh
 

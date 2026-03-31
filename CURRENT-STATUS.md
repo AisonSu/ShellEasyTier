@@ -61,6 +61,7 @@ capabilities implemented:
   - `easytier-core-<arch>`
   - `easytier-cli-<arch>`
   - `easytier-web-embed-<arch>`
+- release workflow now validates the expected runtime asset matrix before publish
 - legacy fallback to `pkg/<arch>/...` is still supported for compatibility and
   test-server usage
 
