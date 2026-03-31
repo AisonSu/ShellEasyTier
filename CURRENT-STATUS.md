@@ -100,6 +100,7 @@ capabilities implemented:
 - web readiness now checks both process and local web API port listening
 - start failure fuse writes `.start_error` and disables future autostart
 - procd stop path no longer recurses through `start.sh stop`
+- start/restart menu flow now reuses shared wait logic instead of local 5-second polling loops
 - menu CLI queries no longer shell-wrap `easytier-cli` through `sh -c`
 
 ### Boot Recovery

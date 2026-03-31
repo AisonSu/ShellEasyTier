@@ -113,6 +113,7 @@ current truth unless the user explicitly changes them:
 - Service/Web menus should expose state-appropriate actions.
 - Effective values, not raw config file text, should be shown whenever possible.
 - Advanced features should stay grouped by capability.
+- Start/restart/stop feedback should rely on shared readiness checks instead of ad-hoc sleeps where possible.
 
 ## Menu Stability Rules
 
@@ -297,6 +298,9 @@ Use this as a quick dependency checklist:
   - check `status-code` and `web-status-code`
   - check menu/status visibility that depends on readiness
   - check snapshot recovery and compatibility hooks that gate on readiness
+- If you change `scripts/menus/1_start.sh`:
+  - check it reuses shared waiting/readiness helpers
+  - check stop feedback reflects actual post-stop state
 - If you change `scripts/libs/build_command.sh`:
   - check `command.env`
   - check `debug`, `start`, and `daemon-run`
