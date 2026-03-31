@@ -224,7 +224,7 @@ compat_install_firewall_hook() {
     cat > "$task_hook" <<EOF
 #!/bin/sh
 APPDIR="$APPDIR"
-pidof easytier-core >/dev/null 2>&1 || {
+"$APPDIR/start.sh" status-code >/dev/null 2>&1 || {
     return 0 2>/dev/null || exit 0
 }
 (

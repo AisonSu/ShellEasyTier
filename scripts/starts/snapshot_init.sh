@@ -62,7 +62,7 @@ schedule_compat_apply() {
 sync_core_autostart() {
     if [ "$core_autostart" = ON ] && [ ! -f "$APPDIR/.dis_startup_core" ] && [ ! -f "$APPDIR/.start_error" ]; then
         /etc/init.d/shelleasytier enable >/dev/null 2>&1
-        pidof easytier-core >/dev/null 2>&1 || /etc/init.d/shelleasytier start >/dev/null 2>&1
+        "$APPDIR/start.sh" status-code >/dev/null 2>&1 || /etc/init.d/shelleasytier start >/dev/null 2>&1
     else
         /etc/init.d/shelleasytier disable >/dev/null 2>&1
         /etc/init.d/shelleasytier stop >/dev/null 2>&1
