@@ -192,16 +192,23 @@ run_cli_query() {
     rm -f "$tmp_out"
 }
 
-run_cli_shell_command() {
-    cmdline="$1"
-    tmp_out="$TMPDIR/cli_custom.out"
+run_cli_args() {
+    label="$1"
+    shift
+
+    tmp_out="$TMPDIR/cli_${label}.out"
     pid=''
     i=1
+
+    [ -x "$BINDIR/easytier-cli" ] || {
+        msg_alert "$MENU_RUN_FIRST"
+        return 1
+    }
 
     mkdir -p "$TMPDIR" 2>/dev/null
     rm -f "$tmp_out"
 
-    sh -c "$cmdline" > "$tmp_out" 2>&1 &
+    "$BINDIR/easytier-cli" -p "$rpc_portal" "$@" > "$tmp_out" 2>&1 &
     pid=$!
 
     while kill -0 "$pid" 2>/dev/null && [ "$i" -le 5 ]; do

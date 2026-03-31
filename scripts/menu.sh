@@ -620,7 +620,7 @@ tools_menu() {
                     1) run_cli_query node ;;
                     2) run_cli_query peer ;;
                     3) run_cli_query route ;;
-                    4) run_cli_shell_command '"'$BINDIR'/easytier-cli" -p "'$rpc_portal'" acl stats' ;;
+                    4) run_cli_args acl_stats acl stats ;;
                     5) msg_alert "$TMPDIR/ShellEasytier.log" ;;
                     6) edit_simple_value_keep_previous update_url "$MENU_INPUT_UPDATE_URL" ;;
                     *) errornum ;;
