@@ -45,7 +45,7 @@ cli_node_ready() {
     mkdir -p "$TMPDIR" 2>/dev/null
     tmp_out="$TMPDIR/cli_ready.$$"
 
-    "$BINDIR/easytier-cli" -p "$rpc_cli_portal" -o json node > "$tmp_out" 2>&1 &
+    "$BINDIR/easytier-cli" -p "$rpc_cli_portal" -o json node info > "$tmp_out" 2>&1 &
     pid=$!
     i=1
 

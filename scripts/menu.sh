@@ -622,7 +622,7 @@ tools_menu() {
             if [ "$acl_enable" = ON ]; then
                 case "$num" in
                     0|'') return ;;
-                    1) run_cli_query node ;;
+                    1) run_cli_args node_info node info ;;
                     2) run_cli_query peer ;;
                     3) run_cli_query route ;;
                     4) run_cli_args acl_stats acl stats ;;
@@ -633,7 +633,7 @@ tools_menu() {
             else
                 case "$num" in
                     0|'') return ;;
-                    1) run_cli_query node ;;
+                    1) run_cli_args node_info node info ;;
                     2) run_cli_query peer ;;
                     3) run_cli_query route ;;
                     4) msg_alert "$TMPDIR/ShellEasytier.log" ;;
