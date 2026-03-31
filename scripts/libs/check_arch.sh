@@ -32,12 +32,6 @@ check_et_arch() {
         mips*)
             et_arch="mips"
             ;;
-        riscv64)
-            et_arch="riscv64"
-            ;;
-        loongarch64)
-            et_arch="loongarch64"
-            ;;
     esac
 
     [ -n "$et_arch" ] || return 1

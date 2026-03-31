@@ -113,8 +113,6 @@ check_arch() {
             ;;
         mipsel*|mipsle*) et_arch=mipsel ;;
         mips*) et_arch=mips ;;
-        riscv64) et_arch=riscv64 ;;
-        loongarch64) et_arch=loongarch64 ;;
         *)
             cecho "\033[31mUnsupported architecture: $machine\033[0m"
             exit 1
