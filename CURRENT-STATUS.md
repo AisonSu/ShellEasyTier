@@ -100,6 +100,7 @@ capabilities implemented:
 - web readiness now checks both process and local web API port listening
 - start failure fuse writes `.start_error` and disables future autostart
 - procd stop path no longer recurses through `start.sh stop`
+- menu CLI queries no longer shell-wrap `easytier-cli` through `sh -c`
 
 ### Boot Recovery
 
@@ -109,6 +110,8 @@ capabilities implemented:
 - alias restoration follows saved `my_alias`
 - service file restoration re-enables autostart without force-restarting an
   already-running core
+- compatibility and recovery hooks now gate on shared readiness probes instead
+  of raw pid-only shortcuts
 
 ### Uninstall
 
@@ -153,6 +156,7 @@ capabilities implemented:
 - installer runs
 - localized install/uninstall assets generate into `dist/`
 - release tarball builds into `dist/`
+- `dist/` assets now include matching `.sha256` files
 - local/remote mode switching works
 - runtime binaries download correctly
 - remote mode can connect to config-server

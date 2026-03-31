@@ -293,6 +293,10 @@ Use this as a quick dependency checklist:
   - check defaults
   - check effective value rendering in menus
   - check recursion/init boundaries
+- If you change `scripts/libs/health_check.sh`:
+  - check `status-code` and `web-status-code`
+  - check menu/status visibility that depends on readiness
+  - check snapshot recovery and compatibility hooks that gate on readiness
 - If you change `scripts/libs/build_command.sh`:
   - check `command.env`
   - check `debug`, `start`, and `daemon-run`
